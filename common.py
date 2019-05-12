@@ -1,4 +1,7 @@
+import matplotlib.pyplot as plt
 from sklearn import metrics
+import cv2
+
 
 DATA_PATH = 'data/'
 X_IMG_PATH = DATA_PATH + 'images/'
@@ -38,6 +41,30 @@ class Metrics:
         return res
 
 
-def get_filenames():
-    filenames = os.listdir(X_IMG_PATH)
-    return filenames
+def load_img(path):
+    """ Loads and returns image in RGB color model """
+    img = cv2.imread(path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return img_rgb
+
+def plot_vessel(images_orig, y_trues, y_preds):
+    fig = plt.figure(figsize=(10, 50))
+    cols, rows = 3, len(images_orig)
+
+    for i in range(rows):
+        fig.add_subplot(rows, cols, cols*i + 1)
+        plt.imshow(images_orig[i], aspect='equal')
+
+        fig.add_subplot(rows, cols, cols*i + 2)
+        plt.imshow(y_trues[i], aspect='equal')
+
+        fig.add_subplot(rows, cols, cols*i + 3)
+        y_pred_mask = __apply_mask_with_color(images_orig[i], y_preds[i])
+        plt.imshow(y_pred_mask, aspect='equal')
+
+def __apply_mask_with_color(img, mask):
+    """ Applies colored mask on original image """
+    img = img.copy()
+    img[mask] = (60, 255, 0)
+    return img
+
