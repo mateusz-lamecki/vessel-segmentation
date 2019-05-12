@@ -47,7 +47,7 @@ def load_img(path):
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return img_rgb
 
-def plot_vessel(images_orig, y_trues, y_preds):
+def plot_vessel(images_orig, y_trues, y_preds, save_file=None):
     fig = plt.figure(figsize=(10, 50))
     cols, rows = 3, len(images_orig)
 
@@ -61,6 +61,9 @@ def plot_vessel(images_orig, y_trues, y_preds):
         fig.add_subplot(rows, cols, cols*i + 3)
         y_pred_mask = __apply_mask_with_color(images_orig[i], y_preds[i])
         plt.imshow(y_pred_mask, aspect='equal')
+
+        if save_file is not None:
+            plt.savefig(save_file)
 
 def __apply_mask_with_color(img, mask):
     """ Applies colored mask on original image """
